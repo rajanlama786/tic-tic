@@ -36,13 +36,6 @@ const App = () => {
     return () => clearInterval(interval);
   }, [running, children]);
 
-
-  const stop = () => {
-    if (interval) {
-      clearInterval(interval);
-    }
-  }
-
   const prev = () => {
     if (index > 0) {
       setIndex(index - 1)
@@ -67,7 +60,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <header onClick={() => stop()}>
+      <header >
         {seconds} seconds have elapsed since mounting.
       </header>
       <div className="DisplayBox">
