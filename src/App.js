@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import './App.css';
 
@@ -11,40 +11,73 @@ const App = () => {
 
   const [index, setIndex] = useState(0);
 
+  const [seconds, setSeconds] = useState(0);
+  const [running, setRunning] = useState(true);
 
-  setTimeout(() => {
-    if (children.length > index) {
-      setIndex(index + 1)
-      //console.log(index);
-      setNumber(children[index])
-      console.log(index);
-    } else {
-      setIndex(0)
-      setNumber(children[index])
-      console.log(index);
+  const toggleRunning = useCallback(() => setRunning(run => !run), []);
+
+  let interval;
+
+  useEffect(() => {
+    if (!running) {
+      // setSeconds(0); // if you want to reset it as well
+      return;
     }
-  }, delay);
+    const interval = setInterval(() => {
+      setSeconds(seconds => seconds + 1);
+      if (children.length > index) {
+        setIndex(index => index + 1)
+        setNumber(children[index])
+      } else {
+        setIndex(0)
+        setNumber(children[index])
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [running, children]);
 
 
+  const stop = () => {
+    if (interval) {
+      clearInterval(interval);
+    }
+  }
 
   const prev = () => {
-    setIndex(index + 1)
-    setNumber(children[index])
-    console.log(index);
+    if (index > 0) {
+      setIndex(index - 1)
+      setNumber(children[index])
+    } else {
+      setIndex(children.length)
+      setNumber(children[index])
+    }
   }
 
   const next = () => {
-    setIndex(index - 1)
-    setNumber(children[index])
+    if (children.length > index) {
+      setIndex(index + 1)
+      setNumber(children[index])
+    } else {
+      setIndex(0)
+      setNumber(children[index])
+    }
     console.log(index);
   }
 
 
   return (
     <div className="App">
+      <header onClick={() => stop()}>
+        {seconds} seconds have elapsed since mounting.
+      </header>
       <div className="DisplayBox">
         {number}
       </div>
+      <button
+        onClick={toggleRunning}
+      >
+        {running ? 'Stop' : 'Play'}
+      </button>
       <button onClick={() => prev()}>Prev</button>
       <button onClick={() => next()}>Next</button>
     </div>
