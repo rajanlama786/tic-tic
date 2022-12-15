@@ -1,3 +1,6 @@
+# Description
+This is the React based application that changes data per second. And have Play, Prev and Next Buttom.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
